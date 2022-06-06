@@ -1,41 +1,43 @@
 // Imports
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import styled from "styled-components";
 import Button from "./ui/Button";
 
 // Component
 const Login = ({ onLogin }) => {
 
-	// State
-	const [formData, setFormData] = useState({
-		email:'', isEmailValid:true,
-		password:'', isPasswordValid:true,
+	// Reducer
+	const initialState = {
+		email:'', isEmailValid:false,
+		password:'', isPasswordValid:false,
 		isFormValid:false
-	});
+	};
+	const reducerFunction = (state, action) => {
+		if (action.type === 'USER_INPUT'){
+			const { name, value } = action.payload.target;
+			return { ...state, [name]:value };
+		}
+		if (action.type === 'CHECK_VALIDITY'){
+			const { isEmailValid, isPasswordValid, isFormValid } = action.payload;
+			return { ...state, isEmailValid, isPasswordValid, isFormValid };
+		}
+		throw new Error(`No action types match ${ action.type }`);
+	};
+	const [state, dispatch] = useReducer(reducerFunction, initialState);
 
 	// Input change
 	const handleChange = (e) => {
-		setFormData((oldState) => {
-			return {
-				...oldState,
-				[e.target.name]:e.target.value
-			};
-		});
+		dispatch({ type:'USER_INPUT', payload:e });
 	};
 
 	// Validation
 	useEffect(() => {
-		const isEmailValid = formData.email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-		const isPasswordValid = formData.password.trim().length >= 5;
+		const isEmailValid = state.email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+		const isPasswordValid = state.password.trim().length >= 5;
 		const isFormValid = isEmailValid && isPasswordValid;
 		// Debouncing with timer (like autoCompletion limitation)
 		const timerChange = setTimeout(() => {
-			setFormData((oldState) => {
-				return {
-					...oldState,
-					isEmailValid, isPasswordValid, isFormValid
-				};
-			});
+			dispatch({ type:'CHECK_VALIDITY', payload:{ isEmailValid, isPasswordValid, isFormValid } });
 		},500);
 		// Clean function run before every new side effect 
 		// (here changes in formData.email or password)
@@ -43,12 +45,12 @@ const Login = ({ onLogin }) => {
 		return () => {
 			clearTimeout(timerChange);
 		};
-	},[formData.email, formData.password]);
+	},[state.email, state.password]);
 
 	// Submit form
 	const submitForm = (e) => {
 		e.preventDefault();
-		onLogin(formData.email, formData.password);
+		onLogin(state.email, state.password);
 	};
 
 	// Return
@@ -56,24 +58,24 @@ const Login = ({ onLogin }) => {
 		<Wrapper className="shadowBoxed" onSubmit={ submitForm }>
 
 			{/* Email */}
-			<div className={ `control ${ !formData.isEmailValid ? 'invalid' : '' }` }>
+			<div className={ `control ${ !state.isEmailValid ? 'invalid' : '' }` }>
 				<label htmlFor="email">Email</label>
 				<input type="email" id="email" name="email"
-					value={ formData.email } onChange={ handleChange }/>
+					value={ state.email } onChange={ handleChange }/>
 			</div>
 			{/* Email */}
 
 			{/* Password */}
-			<div className={ `control ${ !formData.isPasswordValid ? 'invalid' : '' }` }>
+			<div className={ `control ${ !state.isPasswordValid ? 'invalid' : '' }` }>
 				<label htmlFor="password">Password</label>
 				<input type="password" id="password" name="password" 
-					value={ formData.password } onChange={ handleChange }/>
+					value={ state.password } onChange={ handleChange }/>
 			</div>
 			{/* Password */}
 
 			{/* Button */}
 			<div className="actions">
-				<Button type="submit" disabled={ !formData.isFormValid }>
+				<Button type="submit" disabled={ !state.isFormValid }>
 					Login
 				</Button>
 			</div>
