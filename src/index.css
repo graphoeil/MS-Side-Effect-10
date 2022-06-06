@@ -1,0 +1,21 @@
+/* Basic reset */
+* {
+	box-sizing: border-box;
+}
+html {
+	font-family: sans-serif;
+	background: #fff;
+}
+body {
+	margin: 0;
+}
+main {
+	margin-top: 6rem;
+}
+
+/* Global styles */
+.shadowBoxed{
+	background: white;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+	border-radius: 10px;
+}
