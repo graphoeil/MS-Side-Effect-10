@@ -1,23 +1,34 @@
 // Imports
-import React from "react";
+import React, { useRef, useImperativeHandle } from "react";
 import styled from "styled-components";
 
 // Component
-const Input = (props) => {
+const Input = React.forwardRef((props, ref) => {
 
 	// Variables
 	const { isValid, id, label, type, name, value, onChangeHandler } = props;
+
+	// Component ref
+	const inputRef = useRef();
+	const activate = () => {
+		inputRef.current.focus();
+	};
+	useImperativeHandle(ref, () => {
+		return {
+			activateFocus:activate
+		};
+	});
 
 	// Return
 	return(
 		<Wrapper className={ `control ${ !isValid ? 'invalid' : '' }` }>
 			<label htmlFor={ id }>{ label }</label>
-			<input type={ type } id={ id } name={ name }
+			<input ref={ inputRef } type={ type } id={ id } name={ name }
 				value={ value } onChange={ onChangeHandler }/>
 		</Wrapper>
 	);
 
-}
+});
 
 // Styled
 const Wrapper = styled.div`

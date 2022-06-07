@@ -1,5 +1,5 @@
 // Imports
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useRef } from "react";
 import styled from "styled-components";
 import Button from "./ui/Button";
 import { useAuthContext } from "../context/auth-context";
@@ -10,6 +10,12 @@ const Login = () => {
 
 	// Context
 	const { login } = useAuthContext();
+
+	// Autofocus on email input with Input component
+	const emailInputRef = useRef();
+	useEffect(() => {
+		emailInputRef.current.activateFocus();
+	},[]);
 
 	// Reducer
 	const initialState = {
@@ -63,7 +69,7 @@ const Login = () => {
 		<Wrapper className="shadowBoxed" onSubmit={ submitForm }>
 
 			{/* Email */}
-			<Input isValid={ state.isEmailValid } label="Email" id="email" type="email" 
+			<Input ref={ emailInputRef } isValid={ state.isEmailValid } label="Email" id="email" type="email" 
 				name="email" value={ state.email } onChangeHandler={ handleChange }/>
 			{/* Email */}
 
