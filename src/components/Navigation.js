@@ -1,18 +1,22 @@
 // Imports
 import React from "react";
 import styled from "styled-components";
+import { useAuthContext } from "../context/auth-context";
 
 // Component
-const Navigation = ({ isLoggedIn, onLogout }) => {
+const Navigation = () => {
+
+	// Context
+	const { user, logout } = useAuthContext();
 
 	// Return
 	return(
 		<Wrapper>
 			{
-				isLoggedIn && <ul>
+				user.isLoggedIn && <ul>
 					<li><a href="/">Users</a></li>
 					<li><a href="/">Admin</a></li>
-					<li><button onClick={ onLogout }>Logout</button></li>
+					<li><button onClick={ logout }>Logout</button></li>
 				</ul>
 			}
 		</Wrapper>

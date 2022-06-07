@@ -4,13 +4,13 @@ import styled from "styled-components";
 import Navigation from "./Navigation";
 
 // Component
-const Header = ({ isAuthenticated, onLogout }) => {
+const Header = () => {
 
 	// Return
 	return(
 		<Wrapper>
 			<h1>A typical page</h1>
-			<Navigation isLoggedIn={ isAuthenticated } onLogout={ onLogout }/>
+			<Navigation/>
 		</Wrapper>
 	);
 

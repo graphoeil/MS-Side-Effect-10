@@ -1,9 +1,13 @@
 // Imports
 import React from "react";
 import styled from "styled-components";
+import { useAuthContext } from "../context/auth-context";
 
 // Component
-const Home = ({ user }) => {
+const Home = () => {
+
+	// Context
+	const { user } = useAuthContext();
 
 	// Return
 	return(
